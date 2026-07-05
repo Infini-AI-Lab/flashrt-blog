@@ -213,6 +213,7 @@ a:hover{color:#ffd089}
   -webkit-background-clip:text;background-clip:text;color:transparent;
   font-style:italic;
   font-weight:600;
+  padding-right:.12em; /* italic correction so the trailing period isn't clipped */
 }
 .hero-sub{
   font-size:clamp(1.05rem, 1.35vw, 1.2rem);
@@ -280,6 +281,9 @@ a:hover{color:#ffd089}
   margin:0 0 1.1rem;font-weight:500;
   color:var(--ink);
 }
+/* italic correction: keep the slanted last glyph from being clipped by the
+   following upright text (or its own background-clip:text box) */
+em{padding-right:.08em}
 .section h2 em{
   font-style:italic;
   background:var(--gradient);
@@ -402,6 +406,9 @@ a:hover{color:#ffd089}
 .figure-inline{margin:0}
 .figure-inline img{padding:1.1rem}
 .figure-inline figcaption{font-size:.84rem;padding:.85rem 1.2rem 1rem}
+.figure-loop{max-width:1060px;margin:0 auto}
+.figure-loop img{padding:1.5rem 1.6rem}
+.figure-loop figcaption{font-size:.86rem}
 .system-intro-text p{
   margin:0 0 1.1rem;
   color:var(--ink-soft);
@@ -517,7 +524,7 @@ a:hover{color:#ffd089}
 
 .tabs{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:.5rem;
   margin-bottom:1.5rem;
   padding:.5rem;
@@ -567,7 +574,7 @@ a:hover{color:#ffd089}
   from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:translateY(0)}
 }
-.panel-head{margin-bottom:1.5rem;max-width:780px}
+.panel-head{margin-bottom:1.5rem}
 .panel-head h3{
   font-family:'Fraunces',Georgia,serif;
   font-size:clamp(1.3rem,2vw,1.7rem);
@@ -615,6 +622,7 @@ a:hover{color:#ffd089}
 }
 .results-table .highlight-row td{font-weight:500}
 .results-table strong{color:var(--amber);font-weight:600}
+.results-table .fn{color:var(--muted);font-weight:400;font-size:.82em;font-style:italic}
 .caption-note{
   margin-top:1.5rem;text-align:center;
   color:var(--muted);font-size:.92rem;
@@ -639,6 +647,8 @@ a:hover{color:#ffd089}
 .paper-meta{position:relative}
 .paper-meta h2{margin-top:.5rem;font-size:clamp(1.7rem,2.6vw,2.3rem)}
 .authors{font-weight:500;margin:.3rem 0 .1rem;color:var(--ink)}
+.authors a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .18s,color .18s}
+.authors a:hover{color:var(--amber);border-bottom-color:var(--amber)}
 .affiliations{margin:0 0 1.4rem;color:var(--muted);font-size:.92rem}
 .abstract{
   color:var(--ink-soft);
@@ -689,11 +699,14 @@ a:hover{color:#ffd089}
   gap:1.25rem;
 }
 .member{
+  display:block;
   background:var(--surface);border:1px solid var(--line);
   border-radius:16px;
   padding:2rem 1.25rem 1.75rem;text-align:center;
+  text-decoration:none;color:inherit;
   transition:transform .2s, border-color .2s, background .2s;
 }
+.member:hover .member-name{color:var(--amber)}
 .member:hover{
   transform:translateY(-3px);
   border-color:rgba(245,183,84,.4);

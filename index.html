@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>FlashRT — Real-time multimodal systems, built by agents</title>
-<meta name="description" content="FlashRT builds the real-time, multimodal loop where humans and AI create together — and the infrastructure that lets AI agents operate the AI stack itself, safely." />
+<meta name="description" content="FlashRT turns a plain single-GPU reference into an optimized multi-GPU deployment for real-time multimodal applications. One coding agent, up to 70x lower latency, no hand-written serving code." />
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="apple-touch-icon" href="favicon.svg" />
@@ -47,9 +47,10 @@
           <span class="accent">built by agents.</span>
         </h1>
         <p class="hero-sub">
-          We build the real-time, multimodal loop where people and generative
-          models create together — and the infrastructure that lets AI agents
-          operate the AI stack itself, safely and at sub-second latency.
+          You write a plain single-GPU reference for a real-time multimodal
+          pipeline. A coding agent turns it into an optimized multi-GPU
+          deployment, deciding what to stream, disaggregate, and parallelize,
+          and checking every step against your reference.
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#paper">Read the paper</a>
@@ -58,8 +59,8 @@
       </div>
       <aside class="hero-stats" aria-label="Headline results">
         <div><div class="stat-num">70×</div><div class="stat-label">lower latency</div></div>
-        <div><div class="stat-num">2.6×</div><div class="stat-label">higher throughput</div></div>
-        <div><div class="stat-num">21<span class="unit">fps</span></div><div class="stat-label">streaming video</div></div>
+        <div><div class="stat-num">2.8×</div><div class="stat-label">higher throughput</div></div>
+        <div><div class="stat-num">5</div><div class="stat-label">real-time apps</div></div>
         <div><div class="stat-num">0<span class="unit">hints</span></div><div class="stat-label">given to the agent</div></div>
       </aside>
     </div>
@@ -72,48 +73,54 @@
         <div class="kicker">Experimental Results</div>
         <h2>One agent. <em>Many</em> real-time applications.</h2>
         <p class="lede">
-          The agent receives only the application and a GPU budget — no hints, no
-          templates. It self-discovers streaming, disaggregation, sequence
-          parallelism, and pipeline parallelism. Hardware: a single node of 8×
-          NVIDIA B200. Agent: Claude Opus 4.7 in Claude Code.
+          For each application the agent is given two things: the reference
+          implementation and a GPU budget. No hints, no templates. It works out
+          streaming, disaggregation, sequence parallelism, and pipeline
+          parallelism on its own, and checks every variant against the reference
+          before keeping it. All numbers below come from one node of 8 NVIDIA
+          B200 GPUs, using Claude Code with Opus 4.8.
         </p>
       </div>
 
       <div class="results-highlights">
         <div class="highlight">
           <div class="highlight-num">70×</div>
-          <div class="highlight-label">latency reduction on a face-to-face conversational agent</div>
+          <div class="highlight-label">lower latency on the face-to-face conversational avatar</div>
         </div>
         <div class="highlight">
-          <div class="highlight-num">31%</div>
+          <div class="highlight-num">2.8×</div>
+          <div class="highlight-label">higher frame rate on the real-time video background editor</div>
+        </div>
+        <div class="highlight">
+          <div class="highlight-num">25%</div>
           <div class="highlight-label">lower latency than hand-tuned vLLM-Omni on Qwen3-Omni</div>
         </div>
         <div class="highlight">
-          <div class="highlight-num">2×</div>
-          <div class="highlight-label">throughput on the WorldPlay video world model</div>
-        </div>
-        <div class="highlight">
-          <div class="highlight-num">2.6×</div>
-          <div class="highlight-label">throughput on Krea-Realtime + SAM 3 background editor</div>
+          <div class="highlight-num">2.4×</div>
+          <div class="highlight-label">higher frame rate on the real-time video narrator</div>
         </div>
       </div>
 
       <div class="tabs" role="tablist" aria-label="Experiment results">
         <button class="tab active" role="tab" aria-selected="true" data-tab="liveavatar">
           <span class="tab-label">Face-to-Face Avatar</span>
-          <span class="tab-meta">LiveAvatar · streaming TTS + S2V</span>
+          <span class="tab-meta">Live-Avatar-14B (S2V)</span>
         </button>
         <button class="tab" role="tab" aria-selected="false" data-tab="qwen3omni">
           <span class="tab-label">Qwen3-Omni</span>
-          <span class="tab-meta">Multimodal LLM · vs. vLLM-Omni</span>
+          <span class="tab-meta">Multimodal LLM</span>
         </button>
         <button class="tab" role="tab" aria-selected="false" data-tab="worldplay">
-          <span class="tab-label">WorldPlay</span>
-          <span class="tab-meta">Autoregressive video world model</span>
+          <span class="tab-label">Video World Model</span>
+          <span class="tab-meta">WorldPlay-5B</span>
         </button>
         <button class="tab" role="tab" aria-selected="false" data-tab="krea">
-          <span class="tab-label">Krea + SAM 3</span>
-          <span class="tab-meta">Real-time video background editor</span>
+          <span class="tab-label">Video Background Editor</span>
+          <span class="tab-meta">Krea-Realtime-14B + SAM 3</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="longlive">
+          <span class="tab-label">Video Narrator</span>
+          <span class="tab-meta">LongLive-2.0-5B</span>
         </button>
       </div>
 
@@ -121,10 +128,12 @@
       <div class="tab-panel active" data-panel="liveavatar" role="tabpanel">
         <div class="panel-head">
           <h3>Face-to-Face Conversational Agent</h3>
-          <p>ASR → LLM → streaming TTS → audio-to-video avatar. The agent composes
-          chunk-level streaming, disaggregation of TTS and S2V engines, and
-          pipeline parallelism inside S2V — collapsing a 98s offline baseline to
-          a 1.43s, 21 FPS interactive stream.</p>
+          <p>The pipeline runs ASR → LLM → streaming TTS → an audio-driven video
+          avatar (Live-Avatar). The agent overlaps the stages with chunk-level
+          streaming, splits the TTS and video engines onto separate GPUs, and
+          pipelines the four denoising steps inside the video model. A ~108-second
+          offline baseline becomes a ~1.6-second interactive stream that runs well
+          above real-time frame rates.</p>
         </div>
         <div class="table-wrap">
           <table class="results-table">
@@ -133,51 +142,55 @@
                 <th>GPUs</th>
                 <th>Deployment</th>
                 <th>Latency ↓</th>
-                <th>Throughput ↑</th>
+                <th>Frame rate ↑</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>1</td>
                 <td>Baseline (sequential, no streaming)</td>
-                <td>98.57 s</td>
+                <td>107.92 s</td>
                 <td>—</td>
               </tr>
               <tr>
                 <td>1</td>
                 <td>FlashRT — streaming</td>
-                <td>6.69 s</td>
-                <td>10.53 FPS</td>
+                <td>3.94 s</td>
+                <td>16.26 FPS</td>
               </tr>
               <tr>
                 <td>3</td>
                 <td>FlashRT — streaming + disaggregation</td>
-                <td><strong>1.11 s</strong></td>
-                <td>15.63 FPS</td>
+                <td><strong>1.57 s</strong></td>
+                <td>40.88 FPS</td>
               </tr>
               <tr class="highlight-row">
                 <td>8</td>
                 <td>FlashRT — streaming + disagg. + S2V pipeline parallelism</td>
-                <td>1.43 s</td>
-                <td><strong>20.51 FPS</strong></td>
+                <td>1.66 s</td>
+                <td>173.67 FPS <span class="fn">(theoretical)</span></td>
               </tr>
             </tbody>
           </table>
         </div>
         <p class="caption-note">
-          70× lower latency and 21 FPS sustained throughput — vs. a hand-written
-          single-GPU reference.
+          About 70× lower latency than the hand-written single-GPU reference
+          (108 s → 1.6 s). The 8-GPU frame rate is the pipeline's theoretical
+          sustainable throughput, far beyond what real-time display needs, so
+          latency is the binding constraint here.
         </p>
       </div>
 
       <!-- Qwen3-Omni -->
       <div class="tab-panel" data-panel="qwen3omni" role="tabpanel" hidden>
         <div class="panel-head">
-          <h3>Qwen3-Omni — beating a hand-engineered baseline</h3>
-          <p>A natively multimodal model: Thinker LLM → Talker LLM → Vocoder.
-          vLLM-Omni implements disaggregation and inter-stage streaming for this
-          workload by hand. FlashRT, given only a synchronous baseline,
-          rediscovers the same structure — and improves on it.</p>
+          <h3>Qwen3-Omni: beating a hand-engineered baseline</h3>
+          <p>Qwen3-Omni is a natively multimodal model with three stages: a
+          Thinker LLM, a Talker LLM, and a vocoder. We compare with vLLM-Omni,
+          which disaggregates and streams these stages with hand-written code.
+          Given only a synchronous baseline, the agent recovers the same structure
+          on its own, then edges past it with lighter-weight data transfer between
+          components than vLLM-Omni's more general implementation.</p>
         </div>
         <div class="table-wrap">
           <table class="results-table">
@@ -193,38 +206,41 @@
               <tr>
                 <td>Sequential (no streaming)</td>
                 <td>1</td>
-                <td>34.22 s</td>
+                <td>42.713 s</td>
                 <td>✓</td>
               </tr>
               <tr>
                 <td>vLLM-Omni (hand-engineered)</td>
-                <td>2</td>
-                <td>0.34 s</td>
+                <td>3</td>
+                <td>0.433 s</td>
                 <td>✓</td>
               </tr>
               <tr class="highlight-row">
                 <td>FlashRT</td>
-                <td>2</td>
-                <td><strong>0.26 s</strong></td>
+                <td>3</td>
+                <td><strong>0.323 s</strong></td>
                 <td>✓</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p class="caption-note">
-          31% lower latency than vLLM-Omni's hand-engineered deployment, while
-          keeping real-time factor below 1.
+          25% lower latency than vLLM-Omni's hand-engineered deployment, while
+          keeping the real-time factor below 1.
         </p>
       </div>
 
       <!-- WorldPlay -->
       <div class="tab-panel" data-panel="worldplay" role="tabpanel" hidden>
         <div class="panel-head">
-          <h3>WorldPlay — flexible latency / throughput tradeoffs</h3>
-          <p>An autoregressive DiT + streaming VAE video world model. The agent
-          chooses between disaggregating DiT and VAE (for throughput via
-          pipelining) and co-locating them with sequence parallelism (for
-          latency) — and scales the strategy with the GPU budget.</p>
+          <h3>Video world model: trading latency against frame rate</h3>
+          <p>A video world model turns keyboard actions (WASD, arrow keys) into a
+          video stream you can move through in real time. We use WorldPlay, which
+          splits into an autoregressive DiT and a streaming VAE that share no
+          state, so the agent can disaggregate them onto separate GPUs and
+          pipeline across frames for a higher frame rate, or co-locate them under
+          sequence parallelism for lower latency. It scales whichever choice it
+          makes to the GPU budget.</p>
         </div>
         <div class="table-wrap">
           <table class="results-table">
@@ -233,63 +249,64 @@
                 <th>GPUs</th>
                 <th>Deployment</th>
                 <th>Latency ↓</th>
-                <th>Throughput ↑</th>
+                <th>Frame rate ↑</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>1</td>
                 <td>Baseline (sequential)</td>
-                <td>845.3 ms</td>
-                <td>18.85 FPS</td>
+                <td>881 ms</td>
+                <td>20.2 FPS</td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>FlashRT — throughput-optimized</td>
-                <td>884.7 ms</td>
-                <td>24.52 FPS</td>
+                <td>FlashRT — frame-rate-optimized</td>
+                <td>894 ms</td>
+                <td>32.3 FPS</td>
               </tr>
               <tr>
                 <td>2</td>
                 <td>FlashRT — latency-optimized</td>
-                <td>662.1 ms</td>
-                <td>24.14 FPS</td>
+                <td>487 ms</td>
+                <td>26.0 FPS</td>
               </tr>
               <tr>
                 <td>4</td>
-                <td>FlashRT — throughput-optimized</td>
-                <td>694.5 ms</td>
-                <td>31.66 FPS</td>
+                <td>FlashRT — frame-rate-optimized</td>
+                <td>746 ms</td>
+                <td>39.8 FPS</td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>FlashRT — latency-optimized</td>
-                <td><strong>557.7 ms</strong></td>
-                <td>28.75 FPS</td>
+                <td><strong>432 ms</strong></td>
+                <td>27.4 FPS</td>
               </tr>
               <tr class="highlight-row">
                 <td>8</td>
-                <td>FlashRT — combined</td>
-                <td>608.7 ms</td>
-                <td><strong>37.77 FPS</strong></td>
+                <td>FlashRT — frame-rate + latency optimized</td>
+                <td>643 ms</td>
+                <td><strong>43.5 FPS</strong></td>
               </tr>
             </tbody>
           </table>
         </div>
         <p class="caption-note">
-          ~2× throughput and ~40% lower latency compared to the sequential
-          baseline.
+          Up to 2.2× the baseline frame rate (20.2 → 43.5 FPS) or 51% lower
+          latency (881 → 432 ms), depending on which target the agent optimizes.
         </p>
       </div>
 
       <!-- Krea + SAM 3 -->
       <div class="tab-panel" data-panel="krea" role="tabpanel" hidden>
         <div class="panel-head">
-          <h3>Krea-Realtime + SAM 3 — concurrent multi-model pipeline</h3>
-          <p>A live webcam stream is split into two paths: Krea-Realtime restyles
-          the frame, SAM 3 segments the user's body, and the outputs are composed
-          so only the background changes. The agent automatically places SAM 3 on
-          its own GPU and parallelizes the rest.</p>
+          <h3>Video background editor: a concurrent multi-model pipeline</h3>
+          <p>A live webcam stream runs down two paths at once. Krea-Realtime
+          restyles each frame while SAM 3 segments the person, and the two
+          results are composited so only the background changes. The agent puts
+          SAM 3 on its own GPU, off the restyling path, and parallelizes the DiT
+          and VAE that do the restyling.</p>
         </div>
         <div class="table-wrap">
           <table class="results-table">
@@ -298,34 +315,102 @@
                 <th>Deployment</th>
                 <th>GPUs</th>
                 <th>Latency ↓</th>
-                <th>Throughput ↑</th>
+                <th>Frame rate ↑</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Baseline (sequential)</td>
                 <td>1</td>
-                <td>1683.9 ms</td>
-                <td>5.85 FPS</td>
+                <td>1715 ms</td>
+                <td>6.82 FPS</td>
+              </tr>
+              <tr>
+                <td>FlashRT — parallel</td>
+                <td>2</td>
+                <td>1014 ms</td>
+                <td>11.54 FPS</td>
               </tr>
               <tr>
                 <td>FlashRT — latency-optimized</td>
                 <td>4</td>
-                <td><strong>766.3 ms</strong></td>
-                <td>11.25 FPS</td>
+                <td><strong>491 ms</strong></td>
+                <td>17.18 FPS</td>
               </tr>
               <tr class="highlight-row">
-                <td>FlashRT — throughput-optimized</td>
+                <td>FlashRT — frame-rate-optimized</td>
                 <td>5</td>
-                <td>803.5 ms</td>
-                <td><strong>15.00 FPS</strong></td>
+                <td>517 ms</td>
+                <td><strong>19.41 FPS</strong></td>
               </tr>
             </tbody>
           </table>
         </div>
         <p class="caption-note">
-          2.2× lower latency and 2.6× higher throughput compared to the
-          sequential baseline.
+          About 3.5× lower latency (1.7 s → 0.5 s) and 2.8× the baseline frame
+          rate (6.8 → 19.4 FPS), with SAM 3 kept on its own GPU throughout.
+        </p>
+      </div>
+
+      <!-- LongLive -->
+      <div class="tab-panel" data-panel="longlive" role="tabpanel" hidden>
+        <div class="panel-head">
+          <h3>Video narrator: generation that follows a live voice</h3>
+          <p>The user speaks, an ASR model transcribes each prompt, and an
+          autoregressive video model (LongLive-2.0-5B) keeps rendering a stream
+          that updates to match. The agent runs the ASR on its own GPU so
+          transcription never stalls generation, then trades latency against
+          frame rate: co-locate the DiT and VAE at a higher sequence-parallel
+          degree for lower latency, or split them apart and tile the VAE for a
+          higher frame rate.</p>
+        </div>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>GPUs</th>
+                <th>Deployment</th>
+                <th>Latency ↓</th>
+                <th>Frame rate ↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Baseline (sequential)</td>
+                <td>674 ms</td>
+                <td>25.8 FPS</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>FlashRT — latency-optimized</td>
+                <td>512 ms</td>
+                <td>36.5 FPS</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>FlashRT — frame-rate-optimized</td>
+                <td>630 ms</td>
+                <td>47.8 FPS</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>FlashRT — latency-optimized</td>
+                <td><strong>430 ms</strong></td>
+                <td>38.5 FPS</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>7</td>
+                <td>FlashRT — frame-rate-optimized</td>
+                <td>597 ms</td>
+                <td><strong>61.5 FPS</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption-note">
+          2.4× the baseline frame rate (25.8 → 61.5 FPS) at 7 GPUs, or 1.6× lower
+          latency (674 → 430 ms) when the agent optimizes for latency instead.
         </p>
       </div>
     </div>
@@ -335,46 +420,48 @@
   <section id="vision" class="section">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">Our two visions</div>
-        <h2>Generative AI in the loop. Agents in the stack.</h2>
+        <div class="kicker">Why we build this</div>
+        <h2>Real-time models for people. Agents for the systems work.</h2>
         <p class="lede">
-          Two research bets, one mission: keep humans at the center of creativity,
-          and let agents take over the parts of the stack that should never have
-          been manual.
+          FlashRT sits between two problems we care about: making generative
+          models fast enough to use interactively, and handing the repetitive
+          systems work behind them to an agent instead of an engineer.
         </p>
       </div>
 
       <div class="vision-grid">
         <article class="vision-card">
           <div class="vision-num">01</div>
-          <h3>Enhancing human creativity and fulfillment</h3>
+          <h3>Interactive generative models</h3>
           <p>
-            We bring generative AI into the interactive, multi-sensory loop where
-            people actually work and create — streaming text, image, audio, and
-            video models with <strong>sub-second latency</strong>, unified
-            multimodal architectures, and collaboration interfaces that
-            <strong>enhance creativity and fulfillment rather than replace them</strong>.
+            Most generative models are still used in batches: send a prompt, wait,
+            get a file back. We are after the interactive case, where audio and
+            video models run fast enough to hold a conversation or react to a live
+            webcam. That takes <strong>streaming generation</strong>, low latency
+            across modalities, and pipelines that compose models from different
+            runtimes without falling apart.
           </p>
           <ul class="vision-list">
-            <li>Streaming, low-latency generation across every modality</li>
-            <li>Unified multimodal architectures, not stitched-together pipelines</li>
-            <li>Interfaces that keep humans in the creative driver's seat</li>
+            <li>Streaming generation at sub-second latency</li>
+            <li>Audio and video models that respond in real time</li>
+            <li>Heterogeneous pipelines, composed from off-the-shelf models</li>
           </ul>
         </article>
 
         <article class="vision-card vision-card--alt">
           <div class="vision-num">02</div>
-          <h3>Making agents first-class operators of the AI stack</h3>
+          <h3>Agents that do the systems work</h3>
           <p>
-            We prepare the infrastructure for a world where AI agents
-            <strong>build, deploy, optimize, secure, and evolve</strong> ML
-            systems with minimal human intervention — and remain safe, verifiable,
-            and robust as models and tools co-evolve alongside them.
+            Making these pipelines run efficiently is slow, specialized work, and
+            it has to be redone for every new application. FlashRT is our first
+            step toward letting an agent do it: <strong>write the deployment,
+            parallelize the models, and check the result against a reference</strong>,
+            with a person supplying only that reference.
           </p>
           <ul class="vision-list">
-            <li>Agent-authored deployment, kernels, and parallelism</li>
-            <li>Self-driven validation against ground-truth references</li>
-            <li>Verifiable, measurement-gated optimization loops</li>
+            <li>Agent-written placement, streaming, and parallelism</li>
+            <li>Every variant checked against a ground-truth reference</li>
+            <li>Decisions gated on measurements, not guesses</li>
           </ul>
         </article>
       </div>
@@ -389,8 +476,10 @@
         <h2>An agent that deploys real-time multimodal applications.</h2>
         <p class="lede">
           You write a simple single-GPU reference. FlashRT lifts it into an
-          optimized multi-GPU deployment — making its own decisions about
-          placement, streaming, and parallelism inside a measurement-gated loop.
+          optimized multi-GPU deployment, choosing placement, streaming, and
+          parallelism for itself. It does this through a <em>chain-of-program</em>
+          workflow: lower the reference one pass at a time, and check the work at
+          every step.
         </p>
       </div>
 
@@ -405,70 +494,83 @@
         </figure>
         <div class="system-intro-text">
           <p>
-            Today, every new real-time multimodal application — a world model, a
-            live avatar, a speech agent — comes with its own pile of bespoke
+            Until now, every new real-time multimodal application (a world model,
+            a live avatar, a speech agent) came with its own round of systems
             engineering: deciding what to disaggregate, what to stream, how to
-            shard, where to place each model.
+            shard, and where to put each model.
           </p>
           <p>
-            <strong>FlashRT collapses that effort into a single agent.</strong> The
-            developer writes a simple, single-GPU reference for the application.
-            The agent does the rest — making and verifying decisions about
-            placement, streaming, and parallelism inside a measurement-gated loop.
+            <strong>FlashRT hands that work to one agent.</strong> You write a
+            plain single-GPU reference for the application, and the agent makes
+            and verifies every placement, streaming, and parallelism decision
+            inside a measurement-gated loop.
           </p>
           <p>
-            The result is one serving system that can target highly diverse
-            applications, with no per-application code on the system side.
+            What comes out is a single serving system that targets very different
+            applications, with no per-application code on the systems side.
           </p>
         </div>
       </div>
+
+      <figure class="figure figure-loop">
+        <img src="images/flashrt-agent-loop.png" alt="FlashRT workflow: from human-written baseline code, the agent constructs and analyzes a hierarchical graph IR, then runs a self-driven validation loop that implements, verifies and benchmarks, and re-hypothesizes each variant before composing the best strategies." />
+        <figcaption>
+          <strong>The chain-of-program workflow.</strong> From a human-written
+          baseline, the agent builds and analyzes a hierarchical graph IR, then
+          runs a self-driven loop that implements, verifies, and benchmarks each
+          variant. Strategies that hold up (here, streaming and a disaggregated
+          DiT + VAE pipeline) get composed; ones that don't (co-located sequence
+          parallelism, for this throughput target) are dropped.
+        </figcaption>
+      </figure>
 
       <div class="pipeline">
         <div class="step">
           <div class="step-num">1</div>
           <h4>Lift</h4>
-          <p>Convert the reference into an intermediate representation that captures
-          data dependencies and persistent state.</p>
+          <p>Turn the reference into a hierarchical graph IR that makes data
+          dependencies, persistent state, and streaming edges explicit.</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">2</div>
           <h4>Validate</h4>
-          <p>Check the IR against the reference with a sequential interpreter,
-          anchoring every later transformation to ground truth.</p>
+          <p>Run the IR through a sequential interpreter and diff it against the
+          reference, so every later step stands on verified ground.</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">3</div>
           <h4>Analyze</h4>
-          <p>Surface a finite list of candidate transformations — streaming,
-          disaggregation, parallelism, fusion — via static analysis.</p>
+          <p>Run static analyses over the IR to surface a finite list of legal
+          moves: streaming, disaggregation, and intra-model parallelism.</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">4</div>
-          <h4>Search</h4>
-          <p>Iterate under a measurement-gated loop: each variant is checked for
-          correctness and benchmarked before the next begins.</p>
+          <h4>Iterate</h4>
+          <p>Work the candidates in a measurement-gated loop: implement, verify
+          against the reference, benchmark, then re-plan from the numbers.</p>
         </div>
       </div>
 
       <div class="insights">
         <div class="insight">
           <div class="insight-tag">Insight 1</div>
-          <h4>Hierarchical planning</h4>
-          <p>Agents can't translate a reference into an efficient deployment in
-          one shot. Forcing them to first produce an IR, then analyze it, then
-          lower it into a deployment dramatically improves quality — mirroring how
-          modern compilers work.</p>
+          <h4>Plan in passes, not one jump</h4>
+          <p>An agent can't turn a reference into an efficient deployment in a
+          single jump. Make it build an IR, analyze that, and only then lower it
+          into a deployment, and the quality climbs. We call this
+          <em>chain-of-program</em>, after the way compilers lower code in passes.</p>
         </div>
         <div class="insight">
           <div class="insight-tag">Insight 2</div>
-          <h4>Self-driven validation loop</h4>
-          <p>Naive prompting yields broken code and a shallow search. A loop where
-          the agent <em>proposes</em> a hypothesis, <em>verifies</em> it against
-          the baseline, then <em>re-plans</em> from measurements produces stronger
-          guarantees and deeper exploration.</p>
+          <h4>Ground the loop in real measurements</h4>
+          <p>Prompted naively, the agent writes broken code and stops exploring
+          early. Instead it writes a test harness that drives simulated input
+          through the deployment's buffers, the way a real frontend would, then
+          <em>proposes</em> a change, <em>verifies</em> it against the reference,
+          and <em>re-plans</em> from the measured latency and frame rate.</p>
         </div>
       </div>
     </div>
@@ -483,28 +585,33 @@
           <div class="kicker">Paper · arXiv 2026</div>
           <h2>FlashRT: Agentic System for Deploying Real-Time Multimodal Applications</h2>
           <p class="authors">
-            Krish Agarwal<sup>1</sup>, Zhuoming Chen<sup>1</sup>,
-            Atri Rudra<sup>2</sup>, Beidi Chen<sup>1</sup>
+            <a href="https://krishagarwal.github.io/" target="_blank" rel="noopener">Krish Agarwal</a><sup>1</sup>,
+            <a href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">Zhuoming Chen</a><sup>1</sup>,
+            <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>2</sup>,
+            <a href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">Beidi Chen</a><sup>1</sup>
           </p>
           <p class="affiliations">
             <sup>1</sup>Carnegie Mellon University &nbsp;·&nbsp;
             <sup>2</sup>University at Buffalo
           </p>
           <p class="abstract">
-            Real-time multimodal applications — voice agents, interactive video
-            generation — compose heterogeneous models into pipelines whose efficient
-            deployment demands application-specific decisions about placement,
-            streaming, and intra-model parallelism. Existing serving systems and
-            auto-parallelism compilers commit to limited transformation sets and
-            fixed assumptions, so reaching high performance on a new pipeline still
-            means hand-crafting it. <strong>FlashRT</strong> directs a generic
-            coding agent through a multi-pass workflow — lift to an IR, validate
-            against a reference, analyze, then iterate inside a measurement-gated
-            loop. Across interactive video world models and multimodal LLMs,
-            FlashRT delivers up to <strong>70×</strong> lower latency and
-            <strong>2.6×</strong> higher throughput, enabling — for the first time
-            — efficient deployment of highly diverse applications within a single
-            serving system.
+            Real-time multimodal applications, from voice agents to interactive
+            video generation, compose heterogeneous models into pipelines whose
+            efficient deployment needs application-specific decisions about
+            placement, streaming, and intra-model parallelism. Existing serving
+            systems and auto-parallelism compilers commit to a fixed set of
+            transformations, so reaching high performance on a new pipeline still
+            means hand-crafting it. <strong>FlashRT</strong> lifts a simple
+            single-GPU reference into an optimized multi-GPU deployment through a
+            <em>chain-of-program</em> workflow: a generic coding agent converts the
+            reference into an intermediate representation, validates that IR
+            against the reference with a sequential interpreter, analyzes it to
+            enumerate candidate transformations, then iterates over them in a
+            measurement-gated loop that checks correctness and benchmarks every
+            variant. Across interactive video world models and multimodal LLMs,
+            FlashRT reaches up to <strong>70×</strong> lower latency and
+            <strong>2.8×</strong> higher throughput, serving highly diverse
+            applications within a single system for the first time.
           </p>
           <div class="paper-cta">
             <a class="btn btn-primary" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">Code on GitHub</a>
@@ -512,7 +619,7 @@
           </div>
         </div>
         <div class="paper-side">
-          <img src="images/agent-rt.png" alt="FlashRT agent diagram." />
+          <img src="images/agent-workflow.png" alt="FlashRT agent workflow (paper Figure 2): (a) an example single-GPU baseline reference, (b) the optimization axes a naive agent misses, and (c) FlashRT's IR-construction and self-driven validation loop." />
         </div>
       </div>
 
@@ -543,38 +650,26 @@
       </div>
 
       <div class="team-grid">
-        <div class="member">
+        <a class="member" href="https://krishagarwal.github.io/" target="_blank" rel="noopener">
           <div class="member-avatar">KA</div>
           <div class="member-name">Krish Agarwal</div>
           <div class="member-role">CMU</div>
-        </div>
-        <div class="member">
+        </a>
+        <a class="member" href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">
           <div class="member-avatar">ZC</div>
           <div class="member-name">Zhuoming Chen</div>
           <div class="member-role">CMU</div>
-        </div>
-        <div class="member">
+        </a>
+        <a class="member" href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">
           <div class="member-avatar">AR</div>
           <div class="member-name">Atri Rudra</div>
           <div class="member-role">University at Buffalo</div>
-        </div>
-        <div class="member">
+        </a>
+        <a class="member" href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">
           <div class="member-avatar">BC</div>
           <div class="member-name">Beidi Chen</div>
           <div class="member-role">CMU · PI</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="container cta-inner">
-      <h2>Work with us on real-time, multimodal, agentic systems.</h2>
-      <p>We're hiring researchers and engineers — and we collaborate openly.</p>
-      <div class="cta-actions">
-        <a class="btn btn-primary" href="mailto:beidic@andrew.cmu.edu">Get in touch</a>
-        <a class="btn btn-ghost" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">Browse the code</a>
+        </a>
       </div>
     </div>
   </section>
@@ -587,7 +682,7 @@
       </div>
       <div class="footer-links">
         <a href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:zhuominc@andrew.cmu.edu">Contact</a>
+        <a href="mailto:krisha2@andrew.cmu.edu">Contact</a>
         <a href="#top">Back to top ↑</a>
       </div>
       <div class="footer-meta">© 2026 Infini-AI Lab. Carnegie Mellon University.</div>
