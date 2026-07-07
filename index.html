@@ -25,8 +25,6 @@
       <a href="#results">Results</a>
       <a href="#vision">Vision</a>
       <a href="#system">System</a>
-      <a href="#paper">Paper</a>
-      <a href="#team">Team</a>
       <a class="nav-cta" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">GitHub →</a>
     </nav>
   </div>
@@ -53,8 +51,7 @@
           and checking every step against your reference.
         </p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#paper">Read the paper</a>
-          <a class="btn btn-ghost" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">View code</a>
+          <a class="btn btn-primary" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">View code</a>
         </div>
       </div>
       <aside class="hero-stats" aria-label="Headline results">
@@ -576,103 +573,6 @@
     </div>
   </section>
 
-
-  <!-- PAPER -->
-  <section id="paper" class="section section-alt">
-    <div class="container">
-      <div class="paper-card">
-        <div class="paper-meta">
-          <div class="kicker">Paper · arXiv 2026</div>
-          <h2>FlashRT: Agentic System for Deploying Real-Time Multimodal Applications</h2>
-          <p class="authors">
-            <a href="https://krishagarwal.github.io/" target="_blank" rel="noopener">Krish Agarwal</a><sup>1</sup>,
-            <a href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">Zhuoming Chen</a><sup>1</sup>,
-            <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>2</sup>,
-            <a href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">Beidi Chen</a><sup>1</sup>
-          </p>
-          <p class="affiliations">
-            <sup>1</sup>Carnegie Mellon University &nbsp;·&nbsp;
-            <sup>2</sup>University at Buffalo
-          </p>
-          <p class="abstract">
-            Real-time multimodal applications, from voice agents to interactive
-            video generation, compose heterogeneous models into pipelines whose
-            efficient deployment needs application-specific decisions about
-            placement, streaming, and intra-model parallelism. Existing serving
-            systems and auto-parallelism compilers commit to a fixed set of
-            transformations, so reaching high performance on a new pipeline still
-            means hand-crafting it. <strong>FlashRT</strong> lifts a simple
-            single-GPU reference into an optimized multi-GPU deployment through a
-            <em>chain-of-program</em> workflow: a generic coding agent converts the
-            reference into an intermediate representation, validates that IR
-            against the reference with a sequential interpreter, analyzes it to
-            enumerate candidate transformations, then iterates over them in a
-            measurement-gated loop that checks correctness and benchmarks every
-            variant. Across interactive video world models and multimodal LLMs,
-            FlashRT reaches up to <strong>70×</strong> lower latency and
-            <strong>2.8×</strong> higher throughput, serving highly diverse
-            applications within a single system for the first time.
-          </p>
-          <div class="paper-cta">
-            <a class="btn btn-primary" href="https://github.com/Infini-AI-Lab/FlashRT/" target="_blank" rel="noopener">Code on GitHub</a>
-            <a class="btn btn-ghost" href="#cite">Cite ↓</a>
-          </div>
-        </div>
-        <div class="paper-side">
-          <img src="images/agent-workflow.png" alt="FlashRT agent workflow (paper Figure 2): (a) an example single-GPU baseline reference, (b) the optimization axes a naive agent misses, and (c) FlashRT's IR-construction and self-driven validation loop." />
-        </div>
-      </div>
-
-      <div id="cite" class="cite-block">
-        <div class="cite-head">
-          <span class="kicker">BibTeX</span>
-        </div>
-<pre><code>@article{agarwal2026flashrt,
-  title   = {FlashRT: Agentic System for Deploying Real-Time Multimodal Applications},
-  author  = {Agarwal, Krish and Chen, Zhuoming and Rudra, Atri and Chen, Beidi},
-  year    = {2026},
-  journal = {arXiv preprint}
-}</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEAM -->
-  <section id="team" class="section">
-    <div class="container">
-      <div class="section-head">
-        <div class="kicker">Team</div>
-        <h2>Built at Infini-AI Lab.</h2>
-        <p class="lede">
-          A research group across Carnegie Mellon and the University at Buffalo,
-          working at the intersection of generative models, systems, and agents.
-        </p>
-      </div>
-
-      <div class="team-grid">
-        <a class="member" href="https://krishagarwal.github.io/" target="_blank" rel="noopener">
-          <div class="member-avatar">KA</div>
-          <div class="member-name">Krish Agarwal</div>
-          <div class="member-role">CMU</div>
-        </a>
-        <a class="member" href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">
-          <div class="member-avatar">ZC</div>
-          <div class="member-name">Zhuoming Chen</div>
-          <div class="member-role">CMU</div>
-        </a>
-        <a class="member" href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">
-          <div class="member-avatar">AR</div>
-          <div class="member-name">Atri Rudra</div>
-          <div class="member-role">University at Buffalo</div>
-        </a>
-        <a class="member" href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">
-          <div class="member-avatar">BC</div>
-          <div class="member-name">Beidi Chen</div>
-          <div class="member-role">CMU · PI</div>
-        </a>
-      </div>
-    </div>
-  </section>
 
   <footer class="footer">
     <div class="container footer-inner">
