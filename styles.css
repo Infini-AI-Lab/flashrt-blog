@@ -289,6 +289,7 @@ a:hover{color:#ffd089}
   max-width:66ch;
   margin:0 auto;
 }
+.manifesto-body strong{color:var(--ink);font-weight:600}
 .manifesto-points{
   text-align:left;
   max-width:1000px;
