@@ -221,6 +221,7 @@ a:hover{color:#ffd089}
   max-width:54ch;
   margin:0 0 2.4rem;
 }
+.hero-sub strong{color:var(--ink);font-weight:600}
 .hero-cta{display:flex;gap:.75rem;flex-wrap:wrap}
 
 /* hero stats — right column, vertical */
