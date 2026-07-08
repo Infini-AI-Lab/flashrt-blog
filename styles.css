@@ -129,6 +129,9 @@ tbody tr.best td{font-weight:600;color:var(--ink);}
 figure{margin:22px 0;text-align:center;}
 figure img{max-width:100%;border-radius:8px;border:1px solid var(--line);}
 figure.narrow img{max-width:70%;}
+figure.fig-float{float:left;width:340px;margin:6px 26px 10px 0;}
+figure.fig-float figcaption{text-align:left;max-width:100%;}
+figure.fig-clear{clear:both;}
 figcaption{
   font-size:.88rem;color:var(--cap);margin:9px auto 0;
   max-width:92%;line-height:1.5;text-align:center;
@@ -176,7 +179,7 @@ figcaption{
 .apps-scroll::-webkit-scrollbar-track{background:transparent;}
 .apps-strip{display:flex;gap:20px;align-items:stretch;}
 .app-card{
-  flex:0 0 auto;width:min(760px,calc(100% - 46px));scroll-snap-align:start;
+  flex:0 0 auto;width:100%;scroll-snap-align:center;
   border:1px solid var(--line);border-radius:10px;background:#fff;
   padding:18px 24px 22px;
 }
@@ -212,4 +215,6 @@ footer .meta{font-size:.82rem;color:#96a0ac;}
   .steps{grid-template-columns:1fr 1fr;}
   .tn,.duo{grid-template-columns:1fr;}
   p,.tldr p{text-align:left;}
+  figure.fig-float{float:none;width:100%;margin:22px 0;}
+  figure.fig-float figcaption{text-align:center;}
 }
