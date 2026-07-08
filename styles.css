@@ -282,41 +282,36 @@ a:hover{color:#ffd089}
   max-width:900px;
   margin:0 auto 2.6rem;
 }
-.manifesto-note{
+.manifesto-body{
+  font-size:clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height:1.75;
+  color:var(--ink-soft);
+  max-width:66ch;
+  margin:0 auto;
+}
+.manifesto-points{
+  text-align:left;
+  max-width:1000px;
+  margin:3rem auto 0;
+}
+.manifesto-close{margin-top:3rem}
+.tn-item{
+  padding-left:1.1rem;
+  border-left:2px solid var(--line);
+  margin-top:1.3rem;
+}
+.tn-item.now{border-left-color:var(--amber)}
+.tn-label{
+  display:block;
   font-family:'JetBrains Mono',ui-monospace,monospace;
-  font-size:.8rem;
-  text-transform:uppercase;
-  letter-spacing:.2em;
-  color:var(--muted);
-  margin:0 0 1.4rem;
-}
-.manifesto-shift{
-  display:flex;align-items:center;justify-content:center;
-  gap:1.1rem;flex-wrap:wrap;
-  font-family:'JetBrains Mono',ui-monospace,monospace;
-  font-size:.95rem;letter-spacing:.02em;
-}
-.shift-old{
-  color:var(--muted);
-  text-decoration:line-through;
-  text-decoration-color:rgba(255,122,138,.65);
-  text-decoration-thickness:2px;
-  border:1px dashed var(--line);
-  border-radius:999px;
-  padding:.55rem 1.15rem;
-}
-.shift-arrow{
-  color:var(--amber);
-  font-size:1.35rem;
-}
-.shift-new{
-  background:var(--gradient);
-  color:#1a1208;
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;
   font-weight:600;
-  border-radius:999px;
-  padding:.6rem 1.25rem;
-  box-shadow:var(--shadow-amber);
+  color:var(--muted);
+  margin-bottom:.4rem;
 }
+.tn-item.now .tn-label{color:var(--amber)}
+.tn-item p{margin:0;font-size:.98rem}
+.tn-item.then p{color:var(--muted)}
 
 /* ---------- Section base ---------- */
 .section{padding:130px 0;position:relative}

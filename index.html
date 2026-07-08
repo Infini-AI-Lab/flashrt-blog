@@ -69,16 +69,69 @@
     <div class="container manifesto-inner">
       <div class="kicker">The vision</div>
       <p class="manifesto-text">
-        AI agents <span class="accent">design and implement</span> complicated
-        systems at runtime&thinsp;—&thinsp;rather than heavily reusing shared
-        infrastructure.
+        AI agents can design and implement complicated systems
+        <span class="accent">at runtime,</span> rather than heavily reusing
+        shared infrastructure.
       </p>
-      <p class="manifesto-note">The design principle of ML software, rewritten:</p>
-      <div class="manifesto-shift">
-        <span class="shift-old">Shared infrastructure</span>
-        <span class="shift-arrow">→</span>
-        <span class="shift-new">One general agent</span>
+      <p class="manifesto-body">
+        For decades we have built ML software as a layered stack: hand-written
+        kernels beneath frameworks, frameworks beneath compilers and serving
+        systems, each layer written once and shared by every application above
+        it. Sharing was never the goal — it was the workaround for two
+        constraints of human-written software. AI agents remove both.
+      </p>
+
+      <div class="vision-grid manifesto-points">
+        <article class="vision-card">
+          <div class="vision-num">01 · Efficient</div>
+          <h3>Every application gets its own system.</h3>
+          <div class="tn-item then">
+            <span class="tn-label">Then</span>
+            <p>
+              Code was expensive to write. Every line an engineer produced had
+              to be amortized across many applications, so everyone settled
+              for the average case of a shared stack.
+            </p>
+          </div>
+          <div class="tn-item now">
+            <span class="tn-label">Now</span>
+            <p>
+              For an agent, lines of code are cheap. It writes, rewrites, and
+              discards code at negligible cost — so a system specialized to
+              your <strong>application</strong>, your <strong>hardware</strong>,
+              and your <strong>efficiency</strong> targets stops being a luxury.
+            </p>
+          </div>
+        </article>
+        <article class="vision-card">
+          <div class="vision-num">02 · Intelligent</div>
+          <h3>Reuse ideas, not frozen code.</h3>
+          <div class="tn-item then">
+            <span class="tn-label">Then</span>
+            <p>
+              Traditional stacks compose only through exact, strictly
+              compatible interfaces. Code that is even slightly incompatible
+              cannot be reused at all — so reuse meant frozen, portable
+              artifacts.
+            </p>
+          </div>
+          <div class="tn-item now">
+            <span class="tn-label">Now</span>
+            <p>
+              An agent reads code the way an engineer does. It takes the
+              <strong>ideas</strong> from a system that almost fits — kernels,
+              schedules, parallelism strategies — and re-implements them for
+              the case at hand.
+            </p>
+          </div>
+        </article>
       </div>
+
+      <p class="manifesto-body manifesto-close">
+        The foundation of ML software shifts
+        <span class="accent">from shared infrastructure to a general agent</span>
+        &thinsp;—&thinsp;and FlashRT is our first concrete step.
+      </p>
     </div>
   </section>
 
