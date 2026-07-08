@@ -108,13 +108,13 @@
           <span class="tab-label">Qwen3-Omni</span>
           <span class="tab-meta">Multimodal LLM</span>
         </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="worldplay">
-          <span class="tab-label">Video World Model</span>
-          <span class="tab-meta">WorldPlay-5B</span>
-        </button>
         <button class="tab" role="tab" aria-selected="false" data-tab="krea">
           <span class="tab-label">Video Background Editor</span>
           <span class="tab-meta">Krea-Realtime-14B + SAM 3</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="worldplay">
+          <span class="tab-label">Video World Model</span>
+          <span class="tab-meta">WorldPlay-5B</span>
         </button>
         <button class="tab" role="tab" aria-selected="false" data-tab="longlive">
           <span class="tab-label">Video Narrator</span>
@@ -228,74 +228,6 @@
         </p>
       </div>
 
-      <!-- WorldPlay -->
-      <div class="tab-panel" data-panel="worldplay" role="tabpanel" hidden>
-        <div class="panel-head">
-          <h3>Video world model: trading latency against frame rate</h3>
-          <p>A video world model turns keyboard actions (WASD, arrow keys) into a
-          video stream you can move through in real time. We use WorldPlay, which
-          splits into an autoregressive DiT and a streaming VAE that share no
-          state, so the agent can disaggregate them onto separate GPUs and
-          pipeline across frames for a higher frame rate, or co-locate them under
-          sequence parallelism for lower latency. It scales whichever choice it
-          makes to the GPU budget.</p>
-        </div>
-        <div class="table-wrap">
-          <table class="results-table">
-            <thead>
-              <tr>
-                <th>GPUs</th>
-                <th>Deployment</th>
-                <th>Latency ↓</th>
-                <th>Frame rate ↑</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Baseline (sequential)</td>
-                <td>881 ms</td>
-                <td>20.2 FPS</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>FlashRT — frame-rate-optimized</td>
-                <td>894 ms</td>
-                <td>32.3 FPS</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>FlashRT — latency-optimized</td>
-                <td>487 ms</td>
-                <td>26.0 FPS</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>FlashRT — frame-rate-optimized</td>
-                <td>746 ms</td>
-                <td>39.8 FPS</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>FlashRT — latency-optimized</td>
-                <td><strong>432 ms</strong></td>
-                <td>27.4 FPS</td>
-              </tr>
-              <tr class="highlight-row">
-                <td>8</td>
-                <td>FlashRT — frame-rate + latency optimized</td>
-                <td>643 ms</td>
-                <td><strong>43.5 FPS</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="caption-note">
-          Up to 2.2× the baseline frame rate (20.2 → 43.5 FPS) or 51% lower
-          latency (881 → 432 ms), depending on which target the agent optimizes.
-        </p>
-      </div>
-
       <!-- Krea + SAM 3 -->
       <div class="tab-panel" data-panel="krea" role="tabpanel" hidden>
         <div class="panel-head">
@@ -350,6 +282,56 @@
         </p>
       </div>
 
+      <!-- WorldPlay -->
+      <div class="tab-panel" data-panel="worldplay" role="tabpanel" hidden>
+        <div class="panel-head">
+          <h3>Video world model: trading latency against frame rate</h3>
+          <p>A video world model turns keyboard actions (WASD, arrow keys) into a
+          video stream you can move through in real time. We use WorldPlay, which
+          splits into an autoregressive DiT and a streaming VAE that share no
+          state, so the agent can disaggregate them onto separate GPUs and
+          pipeline across frames for a higher frame rate, or co-locate them under
+          sequence parallelism for lower latency. It scales whichever choice it
+          makes to the GPU budget.</p>
+        </div>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>GPUs</th>
+                <th>Deployment</th>
+                <th>Latency ↓</th>
+                <th>Frame rate ↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Baseline (sequential)</td>
+                <td>881 ms</td>
+                <td>20.2 FPS</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>FlashRT — frame-rate-optimized</td>
+                <td>894 ms</td>
+                <td>32.3 FPS</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>FlashRT — latency-optimized</td>
+                <td>487 ms</td>
+                <td>26.0 FPS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption-note">
+          1.6× the baseline frame rate or 45% lower latency, depending on which target the agent optimizes.
+          See paper for extended results with scaling to more GPUs.
+        </p>
+      </div>
+
       <!-- LongLive -->
       <div class="tab-panel" data-panel="longlive" role="tabpanel" hidden>
         <div class="panel-head">
@@ -391,24 +373,13 @@
                 <td>630 ms</td>
                 <td>47.8 FPS</td>
               </tr>
-              <tr>
-                <td>4</td>
-                <td>FlashRT — latency-optimized</td>
-                <td><strong>430 ms</strong></td>
-                <td>38.5 FPS</td>
-              </tr>
-              <tr class="highlight-row">
-                <td>7</td>
-                <td>FlashRT — frame-rate-optimized</td>
-                <td>597 ms</td>
-                <td><strong>61.5 FPS</strong></td>
-              </tr>
             </tbody>
           </table>
         </div>
         <p class="caption-note">
-          2.4× the baseline frame rate (25.8 → 61.5 FPS) at 7 GPUs, or 1.6× lower
-          latency (674 → 430 ms) when the agent optimizes for latency instead.
+          1.9× the baseline frame rate, or 1.3× lower
+          latency when the agent optimizes for latency instead. See paper
+          for extended results with scaling to more GPUs.
         </p>
       </div>
     </div>
