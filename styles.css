@@ -313,6 +313,41 @@ a:hover{color:#ffd089}
 .tn-item.now .tn-label{color:var(--amber)}
 .tn-item p{margin:0;font-size:.98rem}
 .tn-item.then p{color:var(--muted)}
+.manifesto-spec{
+  max-width:1000px;
+  margin:1.5rem auto 0;
+  padding:2rem 2.2rem;
+  border:1px dashed var(--line);
+  border-radius:22px;
+  background:var(--surface);
+}
+.spec-lead{
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;
+  font-weight:600;
+  color:var(--amber);
+  margin-bottom:1.1rem;
+}
+.spec-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:.6rem;
+  margin-bottom:1.2rem;
+}
+.chip{
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.84rem;letter-spacing:.02em;
+  padding:.45rem 1rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--ink-soft);
+}
+.spec-note{
+  margin:0 auto;
+  max-width:62ch;
+  font-size:.98rem;
+  color:var(--ink-soft);
+}
 
 /* ---------- Section base ---------- */
 .section{padding:130px 0;position:relative}
