@@ -72,7 +72,9 @@
         <button class="app-tab" data-i="4">Video Narrator</button>
       </div>
 
-      <div class="apps-scroll" id="appsScroll">
+      <div class="apps-viewport">
+        <button class="app-arrow" data-dir="-1" type="button" aria-label="Previous application"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="apps-scroll" id="appsScroll">
         <div class="apps-strip">
 
           <!-- LiveAvatar -->
@@ -107,12 +109,12 @@
 
           <!-- Qwen3-Omni -->
           <article class="app-card">
-            <h3>Qwen3-Omni: Beating a Hand-Engineered Baseline <span class="model">Multimodal LLM</span></h3>
+            <h3>Qwen3-Omni <span class="model">Multimodal LLM</span></h3>
             <p>
-              Qwen3-Omni is a natively multimodal model with three stages: a Thinker LLM, a Talker LLM,
-              and a vocoder. We compare with vLLM-Omni, which disaggregates and streams these stages with
-              hand-written code. Given only a synchronous baseline, the agent recovers the same structure
-              on its own, then edges past it with lighter-weight data transfer between components than
+              Qwen3-Omni is a natively multimodal model with three stages to support text input → audio output:
+              a Thinker LLM, a Talker LLM, and a vocoder. We compare with vLLM-Omni, which disaggregates and streams
+              these stages with hand-written code. Given only a synchronous baseline, the agent recovers the same
+              structure on its own, then edges past it with lighter-weight data transfer between components than
               vLLM-Omni's more general implementation.
             </p>
             <div class="tbl-wrap">
@@ -135,7 +137,7 @@
 
           <!-- Krea + SAM 3 -->
           <article class="app-card">
-            <h3>Video Background Editor: A Concurrent Multi-Model Pipeline <span class="model">Krea-Realtime-14B + SAM 3</span></h3>
+            <h3>Video Background Editor <span class="model">Krea-Realtime-14B + SAM 3</span></h3>
             <p>
               A live webcam stream runs down two paths at once. Krea-Realtime restyles each frame while
               SAM 3 segments the person, and the two results are composited so only the background changes.
@@ -163,7 +165,7 @@
 
           <!-- WorldPlay -->
           <article class="app-card">
-            <h3>Video World Model: Trading Latency Against Frame Rate <span class="model">WorldPlay-5B</span></h3>
+            <h3>Video World Model <span class="model">WorldPlay-5B</span></h3>
             <p>
               A video world model turns keyboard actions (WASD, arrow keys) into a video stream you can
               move through in real time. We use WorldPlay, which splits into an autoregressive DiT and a
@@ -191,7 +193,7 @@
 
           <!-- LongLive -->
           <article class="app-card">
-            <h3>Video Narrator: Generation That Follows a Live Voice <span class="model">LongLive-2.0-5B</span></h3>
+            <h3>Video Narrator <span class="model">LongLive-2.0-5B</span></h3>
             <p>
               The user speaks, an ASR model transcribes each prompt, and an autoregressive video model
               (LongLive-2.0-5B) keeps rendering a stream that updates to match. The agent runs the ASR on
@@ -218,6 +220,8 @@
           </article>
 
         </div>
+        </div>
+        <button class="app-arrow" data-dir="1" type="button" aria-label="Next application"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -454,29 +458,79 @@
   (function(){
     var scroll = document.getElementById('appsScroll');
     if(!scroll) return;
-    var cards = Array.prototype.slice.call(document.querySelectorAll('.app-card'));
+    var strip = scroll.querySelector('.apps-strip');
     var tabs  = Array.prototype.slice.call(document.querySelectorAll('.app-tab'));
+    var real  = Array.prototype.slice.call(strip.querySelectorAll('.app-card'));
+    var n = real.length;
+    if(n < 2) return;
+
+    // Clone the first and last cards so the ends wrap seamlessly:
+    // [clone(last), card0, card1, ..., card(n-1), clone(first)]
+    var firstClone = real[0].cloneNode(true);
+    var lastClone  = real[n - 1].cloneNode(true);
+    [firstClone, lastClone].forEach(function(c){
+      c.classList.add('clone'); c.setAttribute('aria-hidden', 'true');
+    });
+    strip.insertBefore(lastClone, real[0]);
+    strip.appendChild(firstClone);
+    var count = n + 2;                 // total slides including clones
+    var realIndex = 0;
+
+    function stride(){ return strip.children[1].offsetLeft - strip.children[0].offsetLeft; }
+    function posOf(){ var s = stride(); return s ? Math.round(scroll.scrollLeft / s) : 1; }
+    function setActive(i){ tabs.forEach(function(t, j){ t.classList.toggle('active', j === i); }); }
+
+    function jump(left){                // instant, seamless reposition
+      var prev = scroll.style.scrollBehavior;
+      scroll.style.scrollBehavior = 'auto';
+      scroll.scrollLeft = left;
+      requestAnimationFrame(function(){ scroll.style.scrollBehavior = prev; });
+    }
+
+    function onScroll(){
+      var p = Math.max(0, Math.min(count - 1, posOf()));
+      realIndex = (p === 0) ? n - 1 : (p === count - 1) ? 0 : p - 1;
+      setActive(realIndex);
+    }
+    function onSettle(){                // after a scroll/flick lands on a clone, wrap
+      var p = posOf();
+      if(p === 0 || p === count - 1) jump((realIndex + 1) * stride());
+    }
+
+    var hasScrollend = ('onscrollend' in window), timer;
+    scroll.addEventListener('scroll', function(){
+      onScroll();
+      if(!hasScrollend){ clearTimeout(timer); timer = setTimeout(onSettle, 150); }
+    }, { passive: true });
+    if(hasScrollend) scroll.addEventListener('scrollend', onSettle);
 
     tabs.forEach(function(t, i){
       t.addEventListener('click', function(){
-        var card = cards[i];
-        if(!card) return;
-        var left = card.getBoundingClientRect().left - scroll.getBoundingClientRect().left + scroll.scrollLeft;
-        scroll.scrollTo({ left: left, behavior: 'smooth' });
+        setActive(i);
+        scroll.scrollTo({ left: (i + 1) * stride(), behavior: 'smooth' });
       });
     });
 
-    if('IntersectionObserver' in window){
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){
-            var i = cards.indexOf(e.target);
-            tabs.forEach(function(t, j){ t.classList.toggle('active', j === i); });
-          }
-        });
-      }, { root: scroll, threshold: 0.6 });
-      cards.forEach(function(c){ io.observe(c); });
-    }
+    // Prev/next arrows — circular via the clone slides.
+    document.querySelectorAll('.app-arrow').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var dir = parseInt(btn.getAttribute('data-dir'), 10);
+        var target = (dir > 0)
+          ? (realIndex === n - 1 ? count - 1 : realIndex + 2)  // last -> clone-first, else next real
+          : (realIndex === 0 ? 0 : realIndex);                 // first -> clone-last, else prev real
+        scroll.scrollTo({ left: target * stride(), behavior: 'smooth' });
+      });
+    });
+
+    var rtimer;
+    window.addEventListener('resize', function(){
+      clearTimeout(rtimer);
+      rtimer = setTimeout(function(){ jump((realIndex + 1) * stride()); }, 120);
+    });
+
+    // Start on the first real card (offset past the leading clone).
+    jump(stride());
+    setActive(0);
   })();
 </script>
 
