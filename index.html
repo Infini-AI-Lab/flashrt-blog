@@ -18,18 +18,16 @@
 
   <!-- ===================== HERO ===================== -->
   <header class="hero" id="top">
-    <h1>FlashRT: Agentic System for Deploying Real-Time Multimodal Applications</h1>
+    <h1>FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications</h1>
     <div class="authors">
       <a href="https://krishagarwal.github.io/" target="_blank" rel="noopener">Krish Agarwal</a><sup>1</sup>,
       <a href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">Zhuoming Chen</a><sup>1</sup>,
-      <a href="mailto:Zhenyu.Gu@amd.com">Zhenyu Gu</a><sup>3</sup>,
       <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>2</sup>,
       <a href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">Beidi Chen</a><sup>1</sup>
     </div>
     <div class="affil">
       <sup>1</sup>Carnegie Mellon University &nbsp;·&nbsp;
-      <sup>2</sup>University at Buffalo &nbsp;·&nbsp;
-      <sup>3</sup>AMD
+      <sup>2</sup>University at Buffalo
     </div>
     <div class="hero-btns">
       <a class="btn" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener">
@@ -47,7 +45,7 @@
   <div class="tldr">
     <p>
       <span class="lbl">Real-time multimodal applications each deserve their own serving systems.</span>
-      Multimodal applications are often quite complicated. Each sits at its own set of tradeoffs on key metrics like latency and throughput, and balancing these metrics can require different hardware budgets for each application. Each application also consists models compute that differently: autoregressive LLMs, diffusion transformers, etc. Ultimately, no shared serving stack can fit them all. Instead, we introduce <strong>FlashRT</strong>, a general agent that customizes a system for each application. FlashRT starts from a plain user-provided reference and works to <strong>develop a customized system to serve it</strong>. The specialization pays off: Across five real-time applications on a single node of 8&thinsp;&times;&thinsp;NVIDIA B200 GPUs, FlashRT reaches up to
+      Multimodal applications are often quite complicated. Each sits at its own set of tradeoffs on key metrics like latency and throughput, and balancing these metrics can require different hardware budgets for each application. Each application also consists models compute that differently: autoregressive LLMs, diffusion transformers, etc. Ultimately, no shared serving stack can fit them all. Instead, we introduce <strong>FlashRT</strong>, an agent harness that guides a coding agent to customize a system for each application. From a plain user-provided reference, it directs the agent to <strong>develop a customized system to serve it</strong>. The specialization pays off: Across five real-time applications on a single node of 8&thinsp;&times;&thinsp;NVIDIA B200 GPUs, FlashRT reaches up to
       <span class="hi">70&times;</span> lower latency and <span class="hi">2.8&times;</span> higher throughput, all with no hand-written serving code.
     </p>
   </div>
@@ -349,8 +347,8 @@
   <section id="system">
     <h2 class="sec"><span class="ic">⚙️</span>The System</h2>
     <p class="sec-sub">
-      A developer writes a simple single-GPU reference. FlashRT lifts it into an optimized multi-GPU
-      deployment, choosing placement, streaming, and parallelism for itself, through a
+      A developer writes a simple single-GPU reference. FlashRT guides a coding agent to lift it into
+      an optimized multi-GPU deployment, choosing placement, streaming, and parallelism, through a
       <em>chain-of-program</em> workflow: lower the reference one pass at a time, and check the work
       at every step.
     </p>
@@ -431,8 +429,8 @@
   <section id="citation">
     <h2 class="sec"><span class="ic">📄</span>Citation</h2>
     <pre class="cite">@misc{flashrt2026,
-  title         = {FlashRT: An Agentic System for Deploying Real-Time Multimodal Applications},
-  author        = {Krish Agarwal and Zhuoming Chen and Zhenyu Gu and Atri Rudra and Beidi Chen},
+  title         = {FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications},
+  author        = {Krish Agarwal and Zhuoming Chen and Atri Rudra and Beidi Chen},
   year          = {2026},
   eprint        = {XXXX.XXXXX},
   archivePrefix = {arXiv},
