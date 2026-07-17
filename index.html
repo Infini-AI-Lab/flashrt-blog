@@ -22,7 +22,7 @@
     <div class="authors">
       <a href="https://krishagarwal.github.io/" target="_blank" rel="noopener">Krish Agarwal</a><sup>1</sup>,
       <a href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">Zhuoming Chen</a><sup>1</sup>,
-      <a href="mailto:zhengsheng1997@gmail.com">John Qin</a><sup>2</sup>,
+      <a href="mailto:yanyuan.qin@amd.com">Yanyuan Qin</a><sup>2</sup>,
       <a href="mailto:Zhenyu.Gu@amd.com">Zhenyu Gu</a><sup>2</sup>,
       <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>3</sup>,
       <a href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">Beidi Chen</a><sup>1</sup>
@@ -121,16 +121,16 @@
                   <tr><th>GPUs</th><th>Deployment</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>1</td><td>Baseline (sequential, no streaming)</td><td class="num">37.7 s</td><td class="num">&mdash;</td></tr>
-                  <tr><td>1</td><td>FlashRT &mdash; streaming</td><td class="num">4.40 s</td><td class="num">34.9 FPS</td></tr>
-                  <tr><td>3</td><td>FlashRT &mdash; streaming + disaggregation</td><td class="num">1.12 s</td><td class="num">38.3 FPS</td></tr>
-                  <tr class="best"><td>8</td><td>FlashRT &mdash; streaming + disagg. + S2V pipeline parallelism</td><td class="num"><strong>0.96 s</strong></td><td class="num"><strong>91.5 FPS</strong></td></tr>
+                  <tr><td>2</td><td>Baseline (sequential, no streaming)</td><td class="num">101.17 s</td><td class="num">&mdash;</td></tr>
+                  <tr><td>2</td><td>FlashRT &mdash; streaming</td><td class="num">10.58 s</td><td class="num">34.2 FPS</td></tr>
+                  <tr><td>3</td><td>FlashRT &mdash; streaming + disaggregation</td><td class="num">1.59 s</td><td class="num">37.8 FPS</td></tr>
+                  <tr class="best"><td>8</td><td>FlashRT &mdash; streaming + disagg. + S2V pipeline parallelism</td><td class="num"><strong>1.47 s</strong></td><td class="num"><strong>78.5 FPS</strong></td></tr>
                 </tbody>
               </table>
             </div>
             <p class="cap-note">
-              About 39&times; lower latency than the single-GPU reference, with the 8-GPU frame rate again far
-              above what real-time display needs.
+              About 69&times; lower latency than the sequential reference (101 s &rarr; 1.5 s), with the 8-GPU
+              frame rate well above what real-time display needs.
             </p>
             </div>
           </article>
@@ -316,15 +316,17 @@
                   <tr><th>GPUs</th><th>Deployment</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>1</td><td>Baseline (sequential)</td><td class="num">784 ms</td><td class="num">19.9 FPS</td></tr>
-                  <tr><td>4</td><td>FlashRT &mdash; latency-optimized</td><td class="num"><strong>349 ms</strong></td><td class="num">38.9 FPS</td></tr>
-                  <tr class="best"><td>5</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">731 ms</td><td class="num"><strong>51.0 FPS</strong></td></tr>
+                  <tr><td>1</td><td>Baseline (sequential)</td><td class="num">784 ms</td><td class="num">18.9 FPS</td></tr>
+                  <tr><td>2</td><td>FlashRT &mdash; latency-optimized</td><td class="num">660 ms</td><td class="num">20.4 FPS</td></tr>
+                  <tr><td>2</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">907 ms</td><td class="num">30.5 FPS</td></tr>
+                  <tr><td>4</td><td>FlashRT &mdash; latency-optimized</td><td class="num"><strong>343 ms</strong></td><td class="num">38.8 FPS</td></tr>
+                  <tr class="best"><td>8</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">442 ms</td><td class="num"><strong>56.5 FPS</strong></td></tr>
                 </tbody>
               </table>
             </div>
             <p class="cap-note">
-              The latency/frame-rate tradeoff holds; on this hardware the agent disaggregates only at higher
-              budgets (5 GPUs), reaching 2.6&times; the baseline frame rate.
+              At 2 GPUs, the same co-location (latency) vs. disaggregation (frame rate) split as on B200; the
+              frame rate scales to 3.0&times; the baseline (56.5 FPS) at 8 GPUs.
             </p>
             </div>
           </article>
@@ -542,7 +544,7 @@
     <h2 class="sec"><span class="ic">📄</span>Citation</h2>
     <pre class="cite">@misc{flashrt2026,
   title         = {FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications},
-  author        = {Krish Agarwal and Zhuoming Chen and John Qin and Zhenyu Gu and Atri Rudra and Beidi Chen},
+  author        = {Krish Agarwal and Zhuoming Chen and Yanyuan Qin and Zhenyu Gu and Atri Rudra and Beidi Chen},
   year          = {2026},
   eprint        = {XXXX.XXXXX},
   archivePrefix = {arXiv},
