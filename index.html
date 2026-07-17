@@ -22,12 +22,15 @@
     <div class="authors">
       <a href="https://krishagarwal.github.io/" target="_blank" rel="noopener">Krish Agarwal</a><sup>1</sup>,
       <a href="https://dreaming-panda.github.io/" target="_blank" rel="noopener">Zhuoming Chen</a><sup>1</sup>,
-      <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>2</sup>,
+      <a href="mailto:zhengsheng1997@gmail.com">John Qin</a><sup>2</sup>,
+      <a href="mailto:Zhenyu.Gu@amd.com">Zhenyu Gu</a><sup>2</sup>,
+      <a href="https://cse.buffalo.edu/faculty/atri/" target="_blank" rel="noopener">Atri Rudra</a><sup>3</sup>,
       <a href="https://www.andrew.cmu.edu/user/beidic/" target="_blank" rel="noopener">Beidi Chen</a><sup>1</sup>
     </div>
     <div class="affil">
       <sup>1</sup>Carnegie Mellon University &nbsp;·&nbsp;
-      <sup>2</sup>University at Buffalo
+      <sup>2</sup>AMD &nbsp;·&nbsp;
+      <sup>3</sup>University at Buffalo
     </div>
     <div class="hero-btns">
       <a class="btn" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener">
@@ -45,21 +48,27 @@
   <div class="tldr">
     <p>
       <span class="lbl">Real-time multimodal applications each deserve their own serving systems.</span>
-      Multimodal applications are often quite complicated. Each sits at its own set of tradeoffs on key metrics like latency and throughput, and balancing these metrics can require different hardware budgets for each application. Each application also consists models compute that differently: autoregressive LLMs, diffusion transformers, etc. Ultimately, no shared serving stack can fit them all. Instead, we introduce <strong>FlashRT</strong>, an agent harness that guides a coding agent to customize a system for each application. From a plain user-provided reference, it directs the agent to <strong>develop a customized system to serve it</strong>. The specialization pays off: Across five real-time applications on a single node of 8&thinsp;&times;&thinsp;NVIDIA B200 GPUs, FlashRT reaches up to
-      <span class="hi">70&times;</span> lower latency and <span class="hi">2.8&times;</span> higher throughput, all with no hand-written serving code.
+      Multimodal applications are often quite complicated. Each sits at its own set of tradeoffs on key metrics like latency and throughput, and balancing these metrics can require different hardware budgets for each application. Each application also consists models compute that differently: autoregressive LLMs, diffusion transformers, etc. Ultimately, no shared serving stack can fit them all. Instead, we introduce <strong>FlashRT</strong>, an agent harness that guides a coding agent to customize a system for each application. From a plain user-provided reference, it directs the agent to <strong>develop a customized system to serve it</strong>. The specialization pays off: Across five real-time applications, on both NVIDIA B200 and AMD MI355X GPUs, FlashRT reaches up to
+      <span class="hi">70&times;</span> lower latency and <span class="hi">3.6&times;</span> higher throughput, all with no hand-written serving code.
     </p>
   </div>
 
   <!-- ===================== RESULTS ===================== -->
-  <section id="results">
+  <section id="results" data-plat="b200">
     <h2 class="sec"><span class="ic">📊</span>One agent, Many Real-time Applications</h2>
     <p class="sec-sub">
       For each application the agent is given two things: the reference implementation and a GPU
       budget. No hints, no templates. It works out streaming, disaggregation, sequence parallelism,
       and pipeline parallelism on its own, and checks every variant against the reference before
-      keeping it. All numbers below come from one node of 8 NVIDIA B200 GPUs, using Claude Code with
-      Opus 4.8.
+      keeping it. We run the agent separately on a node of 8 NVIDIA B200 GPUs and a node of 8 AMD MI355X
+      GPUs; use the toggle to switch between them. (Agent: Claude Code with Opus 4.8.)
     </p>
+
+    <div class="plat-toggle" role="tablist" aria-label="Hardware">
+      <span class="plat-slider" aria-hidden="true"></span>
+      <button class="plat-btn" data-plat="b200" type="button">NVIDIA B200</button>
+      <button class="plat-btn" data-plat="mi355x" type="button">AMD MI355X</button>
+    </div>
 
     <div class="apps">
       <div class="apps-nav" role="tablist" aria-label="Applications">
@@ -82,9 +91,10 @@
               The pipeline runs ASR → LLM → streaming TTS → an audio-driven video avatar (Live-Avatar).
               The agent overlaps the stages with chunk-level streaming, splits the TTS and video engines
               onto separate GPUs, and pipelines the four denoising steps inside the video model. A
-              ~108-second offline baseline becomes a ~1.6-second interactive stream that runs well above
+              minutes-long offline baseline becomes a roughly one-second interactive stream that runs well above
               real-time frame rates.
             </p>
+            <div class="plat-panel" data-plat="b200">
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -103,6 +113,26 @@
               8-GPU frame rate is the pipeline's theoretical sustainable throughput, far beyond what
               real-time display needs, so latency is the binding constraint here.
             </p>
+            </div>
+            <div class="plat-panel" data-plat="mi355x">
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr><th>GPUs</th><th>Deployment</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Baseline (sequential, no streaming)</td><td class="num">37.7 s</td><td class="num">&mdash;</td></tr>
+                  <tr><td>1</td><td>FlashRT &mdash; streaming</td><td class="num">4.40 s</td><td class="num">34.9 FPS</td></tr>
+                  <tr><td>3</td><td>FlashRT &mdash; streaming + disaggregation</td><td class="num">1.12 s</td><td class="num">38.3 FPS</td></tr>
+                  <tr class="best"><td>8</td><td>FlashRT &mdash; streaming + disagg. + S2V pipeline parallelism</td><td class="num"><strong>0.96 s</strong></td><td class="num"><strong>91.5 FPS</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cap-note">
+              About 39&times; lower latency than the single-GPU reference, with the 8-GPU frame rate again far
+              above what real-time display needs.
+            </p>
+            </div>
           </article>
 
           <!-- Qwen3-Omni -->
@@ -115,6 +145,7 @@
               structure on its own, then edges past it with lighter-weight data transfer between components than
               vLLM-Omni's more general implementation.
             </p>
+            <div class="plat-panel" data-plat="b200">
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -131,6 +162,25 @@
               25% lower latency than vLLM-Omni's hand-engineered deployment, while keeping the real-time
               factor below 1.
             </p>
+            </div>
+            <div class="plat-panel" data-plat="mi355x">
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr><th>Deployment</th><th>GPUs</th><th class="num">Latency &darr;</th><th class="num">RTF &lt; 1</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Sequential (no streaming)</td><td>1</td><td class="num">29.66 s</td><td class="num">&#10003;</td></tr>
+                  <tr><td>vLLM-Omni (hand-engineered)</td><td>3</td><td class="num">0.779 s</td><td class="num">&#10003;</td></tr>
+                  <tr class="best"><td>FlashRT</td><td>3</td><td class="num"><strong>0.276 s</strong></td><td class="num">&#10003;</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cap-note">
+              65% lower latency than vLLM-Omni's hand-engineered deployment &mdash; a wider margin than on
+              B200 &mdash; while keeping the real-time factor below 1.
+            </p>
+            </div>
           </article>
 
           <!-- Krea + SAM 3 -->
@@ -142,6 +192,7 @@
               The agent puts SAM 3 on its own GPU, off the restyling path, and parallelizes the DiT and VAE
               that do the restyling.
             </p>
+            <div class="plat-panel" data-plat="b200">
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -159,6 +210,25 @@
               About 3.5× lower latency (1.7 s → 0.5 s) and 2.8× the baseline frame rate (6.8 → 19.4 FPS),
               with SAM 3 kept on its own GPU throughout.
             </p>
+            </div>
+            <div class="plat-panel" data-plat="mi355x">
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr><th>Deployment</th><th>GPUs</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Baseline (sequential)</td><td>1</td><td class="num">2393 ms</td><td class="num">5.40 FPS</td></tr>
+                  <tr class="best"><td>FlashRT &mdash; latency-optimized</td><td>4</td><td class="num"><strong>612 ms</strong></td><td class="num">7.93 FPS</td></tr>
+                  <tr><td>FlashRT &mdash; frame-rate-optimized</td><td>5</td><td class="num">646 ms</td><td class="num"><strong>8.90 FPS</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cap-note">
+              About 3.9&times; lower latency. Here the pipeline is bound by the SAM&nbsp;3 segmentation path,
+              so disaggregating the VAE adds little frame rate.
+            </p>
+            </div>
           </article>
 
           <!-- WorldPlay -->
@@ -171,6 +241,7 @@
               pipeline across frames for a higher frame rate, or co-locate them under sequence parallelism
               for lower latency. It scales whichever choice it makes to the GPU budget.
             </p>
+            <div class="plat-panel" data-plat="b200">
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -187,6 +258,27 @@
               1.5× the baseline frame rate or 43% lower latency, depending on which target the agent
               optimizes. See paper for extended results with scaling to more GPUs.
             </p>
+            </div>
+            <div class="plat-panel" data-plat="mi355x">
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr><th>GPUs</th><th>Deployment</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Baseline (sequential)</td><td class="num">1102 ms</td><td class="num">15.6 FPS</td></tr>
+                  <tr><td>2</td><td>FlashRT &mdash; latency-optimized</td><td class="num">576 ms</td><td class="num">19.8 FPS</td></tr>
+                  <tr><td>2</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">723 ms</td><td class="num">29.5 FPS</td></tr>
+                  <tr><td>4</td><td>FlashRT &mdash; latency-optimized</td><td class="num"><strong>320 ms</strong></td><td class="num">31.8 FPS</td></tr>
+                  <tr class="best"><td>8</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">326 ms</td><td class="num"><strong>56.8 FPS</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cap-note">
+              At 2 GPUs, the same co-location (latency) vs. disaggregation (frame rate) split as on B200; the
+              frame rate scales to 3.6&times; the baseline (56.8 FPS) at 8 GPUs.
+            </p>
+            </div>
           </article>
 
           <!-- LongLive -->
@@ -199,6 +291,7 @@
               co-locate the DiT and VAE at a higher sequence-parallel degree for lower latency, or split them
               apart and tile the VAE for a higher frame rate.
             </p>
+            <div class="plat-panel" data-plat="b200">
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -215,6 +308,25 @@
               1.9× the baseline frame rate, or 1.3× lower latency when the agent optimizes for latency
               instead. See paper for extended results with scaling to more GPUs.
             </p>
+            </div>
+            <div class="plat-panel" data-plat="mi355x">
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr><th>GPUs</th><th>Deployment</th><th class="num">Latency &darr;</th><th class="num">Frame rate &uarr;</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Baseline (sequential)</td><td class="num">784 ms</td><td class="num">19.9 FPS</td></tr>
+                  <tr><td>4</td><td>FlashRT &mdash; latency-optimized</td><td class="num"><strong>349 ms</strong></td><td class="num">38.9 FPS</td></tr>
+                  <tr class="best"><td>5</td><td>FlashRT &mdash; frame-rate-optimized</td><td class="num">731 ms</td><td class="num"><strong>51.0 FPS</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="cap-note">
+              The latency/frame-rate tradeoff holds; on this hardware the agent disaggregates only at higher
+              budgets (5 GPUs), reaching 2.6&times; the baseline frame rate.
+            </p>
+            </div>
           </article>
 
         </div>
@@ -430,7 +542,7 @@
     <h2 class="sec"><span class="ic">📄</span>Citation</h2>
     <pre class="cite">@misc{flashrt2026,
   title         = {FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications},
-  author        = {Krish Agarwal and Zhuoming Chen and Atri Rudra and Beidi Chen},
+  author        = {Krish Agarwal and Zhuoming Chen and John Qin and Zhenyu Gu and Atri Rudra and Beidi Chen},
   year          = {2026},
   eprint        = {XXXX.XXXXX},
   archivePrefix = {arXiv},
@@ -529,6 +641,21 @@
     // Start on the first real card (offset past the leading clone).
     jump(stride());
     setActive(0);
+  })();
+</script>
+
+<script>
+  (function(){
+    var results = document.getElementById('results');
+    if(!results) return;
+    var btns = Array.prototype.slice.call(results.querySelectorAll('.plat-btn'));
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        results.setAttribute('data-plat', b.getAttribute('data-plat'));
+        btns.forEach(function(x){ x.classList.toggle('active', x === b); });
+        window.dispatchEvent(new Event('resize'));   // let the carousel re-measure after height change
+      });
+    });
   })();
 </script>
 
